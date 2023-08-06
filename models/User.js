@@ -10,7 +10,8 @@ const UserSchema = new Schema({
   firstName: String,
   lastName: String,
   phone: String,
-  email: String,
+  address: Map,
+  car: Map,
 });
 
 //export model

@@ -11,6 +11,10 @@ const OrderSchema = new Schema({
   time: String,
   price: String,
   email: String,
+  approved: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 //export model
