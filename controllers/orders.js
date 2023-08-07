@@ -1,6 +1,7 @@
-var ObjectId = require("mongodb").ObjectId;
+var ObjectId = require("mongodb").ObjectId; //ObjectId initialization
 const Order = require("../models/Order");
 
+//Get all orders for db
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find({});
@@ -13,6 +14,8 @@ const getAllOrders = async (req, res) => {
     return res.send("Server error");
   }
 };
+
+//create new entry in db
 const createOrder = async (req, res) => {
   try {
     const newOrder = await Order.create(req.body);
@@ -23,9 +26,9 @@ const createOrder = async (req, res) => {
   }
 };
 
+//get specific order from db
 const getOrder = async (req, res) => {
   const { id: orderId } = req.params;
-
   try {
     const order = await User.findOne({ _id: orderId });
     if (!order) {
@@ -38,6 +41,7 @@ const getOrder = async (req, res) => {
   }
 };
 
+//update an order in db
 const updateOrder = async (req, res) => {
   const { id: orderId } = req.params;
 
@@ -57,6 +61,7 @@ const updateOrder = async (req, res) => {
   }
 };
 
+//delete an order from db
 const deleteOrder = async (req, res) => {
   const { id: orderId } = req.params;
   try {
