@@ -6,9 +6,10 @@ require("dotenv").config();
 
 const users = require("./routes/users");
 const orders = require("./routes/orders");
+const auth = require("./routes/auth");
 
-//models
-const User = require("./models/User");
+//middleware
+const authMiddleWare = require("./middleware/authentication");
 
 const app = express();
 app.use(express.json());
@@ -21,15 +22,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/users", users);
-app.use("/api/v1/orders", orders);
-
-// app.post("/new-user", async (req, res) => {
-//   const newUser = await User.create(req.body);
-//   res.json({
-//     newUser,
-//   });
-// });
-
+app.use("/api/v1/orders", authMiddleWare, orders);
+app.use("/api/v1/auth", auth);
 const start = async () => {
   try {
     await connectDB(process.env.MONGODB_URI);
