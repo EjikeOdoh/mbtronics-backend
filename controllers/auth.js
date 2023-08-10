@@ -21,7 +21,7 @@ const login = async (req, res) => {
   }
 
   //search user email on db
-  const user = User.findOne({ email });
+  const user = await User.findOne({ email });
 
   //if not found
   if (!user) {
@@ -41,7 +41,7 @@ const login = async (req, res) => {
 
   //finally, send user details
   return res.json({
-    user,
+    user: user,
     token,
   });
 };
