@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 
 //connect to database
 const connectDB = require("./db/connectDB");
@@ -11,6 +12,7 @@ const auth = require("./routes/auth");
 const authMiddleWare = require("./middleware/authentication");
 
 const app = express();
+app.use(cookieParser());
 app.use(express.json());
 
 const port = process.env.PORT || 5000;
@@ -22,6 +24,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/orders", authMiddleWare, orders);
+
 const start = async () => {
   try {
     await connectDB(process.env.MONGODB_URI);

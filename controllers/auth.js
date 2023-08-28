@@ -22,21 +22,21 @@ const login = async (req, res) => {
   const user = await User.findOne({ email });
   //if not found
   if (!user) {
+    res.clearCookie("token", { maxAge: 600000, httpOnly: true });
     return res.send("Invalid credentials");
   }
   //if found, checking for password
   const isPasswordCorrect = await user.comparePassword(password);
   //if not correct
   if (!isPasswordCorrect) {
+    res.clearCookie("token", { maxAge: 600000, httpOnly: true });
     return res.send("Invalid credentials");
   }
   //if correct, create new token
   const token = user.createToken();
   //finally, send user details
-  return res.json({
-    user: user,
-    token,
-  });
+  res.cookie("token", token, { maxAge: 600000, httpOnly: true });
+  return res.redirect("/");
 };
 
 const updateUser = async (req, res) => {
