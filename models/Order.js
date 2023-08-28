@@ -2,35 +2,40 @@
 const mongoose = require("mongoose");
 
 //import Schema
-const { Schema, model } = mongoose;
+const { Schema, model, Types } = mongoose;
 
 //create user schema
-const OrderSchema = new Schema({
-  product: {
-    type: String,
-    required: [true, "must provide product"],
+const OrderSchema = new Schema(
+  {
+    product: {
+      type: String,
+      required: [true, "must provide product"],
+    },
+    date: {
+      type: String,
+      required: [true, "must provide date"],
+    },
+    time: {
+      type: String,
+      required: [true, "must provide time"],
+    },
+    price: {
+      type: String,
+      required: [true, "must provide price"],
+    },
+    status: {
+      type: String,
+      enum: ["approved", "declined", "pending"],
+      default: "pending",
+    },
+    createdBy: {
+      type: Types.ObjectId,
+      ref: "User",
+      required: [true, "Please provide user"],
+    },
   },
-  date: {
-    type: String,
-    required: [true, "must provide date"],
-  },
-  time: {
-    type: String,
-    required: [true, "must provide time"],
-  },
-  price: {
-    type: String,
-    required: [true, "must provide price"],
-  },
-  email: {
-    type: String,
-    required: [true, "must provide email"],
-  },
-  approved: {
-    type: Boolean,
-    default: false,
-  },
-});
+  { timestamps: true }
+);
 
 //export model
 module.exports = model("Order", OrderSchema);

@@ -4,7 +4,6 @@ const express = require("express");
 const connectDB = require("./db/connectDB");
 require("dotenv").config();
 
-const users = require("./routes/users");
 const orders = require("./routes/orders");
 const auth = require("./routes/auth");
 
@@ -21,9 +20,8 @@ app.get("/", (req, res) => {
   res.status(200).json({ status: "Successful", data: {} });
 });
 
-app.use("/api/v1/users", users);
-app.use("/api/v1/orders", authMiddleWare, orders);
 app.use("/api/v1/auth", auth);
+app.use("/api/v1/orders", authMiddleWare, orders);
 const start = async () => {
   try {
     await connectDB(process.env.MONGODB_URI);

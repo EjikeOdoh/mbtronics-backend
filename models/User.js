@@ -30,9 +30,13 @@ UserSchema.pre("save", async function () {
 });
 
 UserSchema.methods.createToken = function () {
-  return jwt.sign({ email: this.email }, process.env.JWT_SECRET, {
-    expiresIn: process.env.TOKEN_LIFESPAN,
-  });
+  return jwt.sign(
+    { userId: this._id, email: this.email },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.TOKEN_LIFESPAN,
+    }
+  );
 };
 
 UserSchema.methods.comparePassword = async function (userPassword) {
