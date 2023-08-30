@@ -1,15 +1,12 @@
 const User = require("../models/User");
 
 const register = async (req, res) => {
-  const user = await User.create({ ...req.body });
-  const token = user.createToken();
-  res.json({
-    user: {
-      email: user.email,
-      name: user.firstName,
-      token,
-    },
-  });
+  try {
+    const user = await User.create({ ...req.body });
+    return res.json({ msg: "Success" });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const login = async (req, res) => {
