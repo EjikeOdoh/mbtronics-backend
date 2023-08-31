@@ -34,7 +34,13 @@ const login = async (req, res) => {
   //finally, send user details
   res.cookie("token", token, { maxAge: 600000, httpOnly: true });
   return res.json({
-    userId: user._id,
+    userId: user?._id,
+    email,
+    firstName: user?.firstName,
+    lastName: user?.lastName,
+    phone: user?.phone,
+    address: user?.address,
+    car: user?.car,
   });
 };
 
