@@ -3,9 +3,9 @@ const User = require("../models/User");
 const register = async (req, res) => {
   try {
     const user = await User.create({ ...req.body });
-    return res.json({ msg: "Success" });
+    return res.json({ status: "Success" });
   } catch (error) {
-    console.log(error);
+    return res.json({ status: "Error" });
   }
 };
 
@@ -20,20 +20,22 @@ const login = async (req, res) => {
   //if not found
   if (!user) {
     res.clearCookie("token", { maxAge: 600000, httpOnly: true });
-    return res.send("Invalid credentials");
+    return res.json({ status: "Error", message: "User not found" });
   }
   //if found, checking for password
   const isPasswordCorrect = await user.comparePassword(password);
   //if not correct
   if (!isPasswordCorrect) {
     res.clearCookie("token", { maxAge: 600000, httpOnly: true });
-    return res.send("Invalid credentials");
+    return res.json({ status: "Error", message: "Password is not correct!" });
   }
   //if correct, create new token
   const token = user.createToken();
   //finally, send user details
   res.cookie("token", token, { maxAge: 600000, httpOnly: true });
-  return res.redirect("/");
+  return res.json({
+    userId: user._id,
+  });
 };
 
 const updateUser = async (req, res) => {
@@ -42,15 +44,15 @@ const updateUser = async (req, res) => {
     const query = { _id: userId };
     const user = await User.findOneAndUpdate(query, req.body, { new: true });
     if (!user) {
-      return res.json({ msg: `${userId} not found` });
+      return res.json({ status: "Error", message: "User not found" });
     }
     return res.json({
-      msg: "Success",
+      status: "Success",
       data: user,
     });
   } catch (error) {
     console.log(error);
-    return res.send("Server error");
+    return res.json({ status: "Error", message: "Server Error" });
   }
 };
 

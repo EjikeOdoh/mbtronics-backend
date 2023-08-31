@@ -28,7 +28,7 @@ app.use("/api/v1/orders", authMiddleWare, orders);
 const start = async () => {
   try {
     await connectDB(process.env.MONGODB_URI);
-    console.log();
+    console.log("db connected");
   } catch (error) {
     console.log(error);
   } finally {
