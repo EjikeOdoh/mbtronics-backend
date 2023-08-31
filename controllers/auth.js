@@ -34,6 +34,7 @@ const login = async (req, res) => {
   //finally, send user details
   res.cookie("token", token, { maxAge: 600000, httpOnly: true });
   return res.json({
+    status: "Success",
     userId: user?._id,
     email,
     firstName: user?.firstName,
