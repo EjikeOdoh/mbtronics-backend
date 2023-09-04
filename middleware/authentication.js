@@ -8,6 +8,7 @@ const auth = async (req, res, next) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     req.user = payload;
     next();
+    
   } catch (error) {
     return res.send("Invalid authentication");
   }

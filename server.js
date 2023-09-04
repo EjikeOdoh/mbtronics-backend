@@ -7,6 +7,7 @@ require("dotenv").config();
 
 const orders = require("./routes/orders");
 const auth = require("./routes/auth");
+const admin = require("./routes/admin");
 
 //middleware
 const authMiddleWare = require("./middleware/authentication");
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/orders", authMiddleWare, orders);
+app.use("/api/v1/admin", admin);
 
 const start = async () => {
   try {

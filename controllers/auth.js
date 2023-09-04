@@ -1,10 +1,13 @@
 const User = require("../models/User");
+const { newUserMailer } = require("../utils/mailer");
 
 const register = async (req, res) => {
   try {
     const user = await User.create({ ...req.body });
+    await newUserMailer(user.email, user.firstName);
     return res.json({ status: "Success" });
   } catch (error) {
+    console.log(error);
     return res.json({ status: "Error" });
   }
 };

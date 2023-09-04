@@ -1,10 +1,13 @@
 const Order = require("../models/Order");
 
+const { newOrderMailer } = require("../utils/mailer");
+
 //Get all orders for db
 const getAllOrders = async (req, res) => {
   const { userId } = req.user;
   try {
     const orders = await Order.find({ createdBy: userId }).sort("createdAt");
+
     res.status(200).json({
       orders,
       count: orders.length,
@@ -20,6 +23,7 @@ const createOrder = async (req, res) => {
   req.body.createdBy = req.user.userId;
   try {
     const order = await Order.create(req.body);
+    await newOrderMailer(order._id);
     return res.status(201).json({ order });
   } catch (error) {
     console.log(error);
