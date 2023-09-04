@@ -91,9 +91,9 @@ const newOrderMailer = async (id) => {
 
     <p>If you have any questions, reach out to support..</p>
 
-    <p>Best regards,<br>
+    <p>Best regards,</p>
 <strong>mbtronics</strong>
-   </p>
+  
 </body>
 `,
   };
