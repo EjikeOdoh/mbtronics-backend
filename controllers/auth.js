@@ -93,13 +93,12 @@ const resetPasswordRequest = async (req, res) => {
       token: resetToken,
     });
 
-    const url = `http://localhost:5173/resetpassword?token=${resetToken}&id=${user._id}`;
+    const url = `https://mbtronics-backend.onrender.com/api/v1/auth/resetpassword?token=${resetToken}&id=${user._id}`;
 
     resetPasswordRequestMailer(user.email, user.firstName, url);
 
     return res.json({
       status: "Success",
-      url,
     });
   } catch (error) {
     console.log(error);
