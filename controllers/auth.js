@@ -93,7 +93,7 @@ const resetPasswordRequest = async (req, res) => {
       token: resetToken,
     });
 
-    const url = `https://mbtronics-backend.onrender.com/api/v1/auth/resetpassword?token=${resetToken}&id=${user._id}`;
+    const url = `https://mbtronics-web.vercel.app?token=${resetToken}&id=${user._id}`;
 
     resetPasswordRequestMailer(user.email, user.firstName, url);
 
