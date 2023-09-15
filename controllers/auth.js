@@ -1,5 +1,7 @@
 const User = require("../models/User");
 const Token = require("../models/Token");
+const bcrypt = require("bcryptjs");
+
 const {
   newUserMailer,
   resetPasswordRequestMailer,
@@ -91,16 +93,13 @@ const resetPasswordRequest = async (req, res) => {
       token: resetToken,
     });
 
-    const url = `google.com`;
+    const url = `http://localhost:5173/resetpassword?token=${resetToken}&id=${user._id}`;
 
     resetPasswordRequestMailer(user.email, user.firstName, url);
 
     return res.json({
       status: "Success",
-      data: {
-        id: user._id,
-        token: resetToken,
-      },
+      url,
     });
   } catch (error) {
     console.log(error);
@@ -108,7 +107,37 @@ const resetPasswordRequest = async (req, res) => {
   }
 };
 
-const resetPassword = async (req, res) => {};
+const resetPassword = async (req, res) => {
+  const { token, id } = req.query;
+  const { password } = req.body;
+  try {
+    const resetToken = await Token.findOne({ userId: id });
+
+    if (!resetToken) {
+      return res.json({ status: "Error", message: "User not found" });
+    }
+
+    const isTokenAuthentic = resetToken.compareToken(token);
+
+    if (!isTokenAuthentic) {
+      return res.json({ status: "Error", message: "Token expired!" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const newPassword = await bcrypt.hash(password, salt);
+
+    const user = await User.findOneAndUpdate(
+      { _id: id },
+      { password: newPassword },
+      { new: true }
+    );
+
+    return res.json({ status: "Success" });
+  } catch (error) {
+    console.log(error);
+    return res.json({ status: "Error", message: "Server Error" });
+  }
+};
 
 module.exports = {
   register,

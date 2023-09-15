@@ -25,4 +25,9 @@ TokenSchema.pre("save", async function () {
   this.token = await bcrypt.hash(this.token, salt);
 });
 
+TokenSchema.methods.compareToken = async function (refreshToken) {
+  const isMatch = await bcrypt.compare(refreshToken, this.token);
+  return isMatch;
+};
+
 module.exports = model("Token", TokenSchema);
