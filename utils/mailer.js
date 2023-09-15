@@ -238,9 +238,31 @@ const declinedOrderMailer = async (
   });
 };
 
+const resetPasswordRequestMailer = async (email, firstName, link) => {
+  const mailOptions = {
+    from: "mbtronics",
+    to: email,
+    subject: "Reset Password",
+    html: `<body>
+    <p>Hi ${firstName}</p>
+    <p>You requested to reset your password.</p>
+    <p>Please, click the link below to reset your password</p>
+    <a href=${link}>Reset Password</a>
+    </body>`,
+  };
+
+  await transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log("Message sent: " + info.response);
+  });
+};
+
 module.exports = {
   newUserMailer,
   newOrderMailer,
   confirmedOrderMailer,
   declinedOrderMailer,
+  resetPasswordRequestMailer,
 };

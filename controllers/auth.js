@@ -1,5 +1,10 @@
 const User = require("../models/User");
-const { newUserMailer } = require("../utils/mailer");
+const Token = require("../models/Token");
+const {
+  newUserMailer,
+  resetPasswordRequestMailer,
+} = require("../utils/mailer");
+const crypto = require("crypto");
 
 const register = async (req, res) => {
   try {
@@ -66,4 +71,49 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { register, login, updateUser };
+const resetPasswordRequest = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({ status: "Error", msg: "Email not found!" });
+    }
+
+    let token = await Token.findOne({});
+    if (token) {
+      await token.deleteOne();
+    }
+
+    let resetToken = crypto.randomBytes(32).toString("hex");
+
+    await Token.create({
+      userId: user._id,
+      token: resetToken,
+    });
+
+    const url = `google.com`;
+
+    resetPasswordRequestMailer(user.email, user.firstName, url);
+
+    return res.json({
+      status: "Success",
+      data: {
+        id: user._id,
+        token: resetToken,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({ status: "Error", message: "Server Error" });
+  }
+};
+
+const resetPassword = async (req, res) => {};
+
+module.exports = {
+  register,
+  login,
+  updateUser,
+  resetPasswordRequest,
+  resetPassword,
+};
